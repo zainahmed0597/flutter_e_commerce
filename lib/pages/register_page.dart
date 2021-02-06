@@ -130,6 +130,7 @@ void _registerUSer()async{
   final responseData = json.decode(response.body);
   print(responseData);
 }
+//response working on web not on emulator or any device
 
   @override
   Widget build(BuildContext context) {
