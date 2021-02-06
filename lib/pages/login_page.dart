@@ -14,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
     return Text('Login', style: Theme.of(context).textTheme.headline1);
   }
 
-  Widget _showEmailinput() {
+  Widget _showEmailInput() {
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
         onSaved: (val) => _password = val,
         validator: (val) => val.length < 6 ? 'Username to short' : null,
         obscureText: _obscureText,
@@ -113,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   _showTitle(),
-                  _showEmailinput(),
+                  _showEmailInput(),
                   _showPasswordInput(),
                   _showFormActions(),
                 ],

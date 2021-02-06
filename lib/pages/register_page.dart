@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -36,10 +38,11 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _showEmailinput() {
+  Widget _showEmailInput() {
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
         onSaved: (val) => _email = val,
         validator: (val) => !val.contains('@') ? 'Invalid Email' : null,
         decoration: InputDecoration(
@@ -115,9 +118,18 @@ class _RegisterPageState extends State<RegisterPage> {
     final form = _formkey.currentState;
     if (form.validate()) {
       form.save();
-      print('Username: $_username, Email: $_email, Password: $_password');
+      // print('Username: $_username, Email: $_email, Password: $_password');
+      _registerUSer();
     }
   }
+
+void _registerUSer()async{
+  http.Response response = await http.post(
+      'http://localhost:1337/auth/local/register',
+      body: {"username":_username, "email":_email, "password":_password});
+  final responseData = json.decode(response.body);
+  print(responseData);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: [
                   _showTitle(),
                   _showUsernameInput(),
-                  _showEmailinput(),
+                  _showEmailInput(),
                   _showPasswordInput(),
                   _showFormActions(),
                 ],

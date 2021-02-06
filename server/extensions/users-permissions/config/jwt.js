@@ -1,3 +1,3 @@
 module.exports = {
-  jwtSecret: process.env.JWT_SECRET || '9f6c2507-1434-4633-abb2-4da154688f29'
+  jwtSecret: process.env.JWT_SECRET || 'b3b5304b-faee-4a4f-a61f-9abc133f7435'
 };
