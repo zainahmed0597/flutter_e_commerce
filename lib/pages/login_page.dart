@@ -6,7 +6,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
   String _email, _password;
 
@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
         onSaved: (val) => _email = val,
-        validator: (val) => !val.contains('@') ? 'Invalid Email' : null,
+        validator: (val) => !val.contains('@') ? 'Invaled email' : null,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Email',
@@ -37,12 +37,11 @@ class _LoginPageState extends State<LoginPage> {
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
-        keyboardType: TextInputType.emailAddress,
         onSaved: (val) => _password = val,
-        validator: (val) => val.length < 6 ? 'Username to short' : null,
+        validator: (val) => val.length < 6 ? 'password is too short' : null,
         obscureText: _obscureText,
         decoration: InputDecoration(
-          suffix: GestureDetector(
+          suffixIcon: GestureDetector(
             onTap: () {
               setState(() => _obscureText = !_obscureText);
             },
@@ -65,24 +64,27 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: Column(
         children: [
-          RaisedButton(
-            child: Text(
-              'Submit',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  .copyWith(color: Colors.black),
-            ),
-            elevation: 8.0,
-            color: Theme.of(context).accentColor,
-            shape: RoundedRectangleBorder(
+          MaterialButton(
+              child: Text(
+                "Submit",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Colors.black),
+              ),
+              elevation: 8.0,
+              onPressed: _submit,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
-              Radius.circular(10.0),
-            )),
-            onPressed: _submit,
-          ),
-          FlatButton(
-            child: Text('New User? Register'),
+                  Radius.circular(10.0),
+                ),
+              ),
+              color: Theme.of(context).accentColor),
+          TextButton(
+            child: Text(
+              "New user? Register",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/register'),
           ),
@@ -92,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _submit() {
-    final form = _formkey.currentState;
+    final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
       print('Email: $_email, Password: $_password');
@@ -110,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: SingleChildScrollView(
             child: Form(
-              key: _formkey,
+              key: _formKey,
               child: Column(
                 children: [
                   _showTitle(),

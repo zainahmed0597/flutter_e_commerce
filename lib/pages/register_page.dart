@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -28,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
         onSaved: (val) => _username = val,
-        validator: (val) => val.length < 6 ? 'Username to short' : null,
+        validator: (val) => val.length < 6 ? 'Username is too short' : null,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Username',
@@ -46,9 +44,8 @@ class _RegisterPageState extends State<RegisterPage> {
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
-        keyboardType: TextInputType.emailAddress,
         onSaved: (val) => _email = val,
-        validator: (val) => !val.contains('@') ? 'Invalid Email' : null,
+        validator: (val) => !val.contains('@') ? 'invalid email' : null,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Email',
@@ -67,10 +64,10 @@ class _RegisterPageState extends State<RegisterPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
         onSaved: (val) => _password = val,
-        validator: (val) => val.length < 6 ? 'Username to short' : null,
+        validator: (val) => val.length < 6 ? 'password is too short' : null,
         obscureText: _obscureText,
         decoration: InputDecoration(
-          suffix: GestureDetector(
+          suffixIcon: GestureDetector(
             onTap: () {
               setState(() => _obscureText = !_obscureText);
             },
@@ -93,35 +90,34 @@ class _RegisterPageState extends State<RegisterPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: Column(
         children: [
-          _isSubmitting == true
-              ? CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation(Theme.of(context).primaryColor),
-                )
-              : RaisedButton(
-                  child: Text(
-                    'Submit',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        .copyWith(color: Colors.black),
-                  ),
-                  elevation: 8.0,
-                  color: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                    Radius.circular(10.0),
-                  )),
-                  onPressed: _submit,
+          MaterialButton(
+              child: Text(
+                "Submit",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Colors.black),
+              ),
+              elevation: 8.0,
+              onPressed: _submit,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10.0),
                 ),
-          FlatButton(
-            child: Text('Existing user? Login'),
+              ),
+              color: Theme.of(context).primaryColor),
+          TextButton(
+            child: Text(
+              "Existing user? Login",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
           ),
         ],
       ),
     );
   }
+
 
   void _submit() {
     final form = _formKey.currentState;
