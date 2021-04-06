@@ -118,7 +118,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
   void _submit() {
     final form = _formKey.currentState;
     if (form.validate()) {
@@ -135,30 +134,26 @@ class _RegisterPageState extends State<RegisterPage> {
         body: {"username": _username, "email": _email, "password": _password});
     final responseData = json.decode(response.body);
     setState(() => _isSubmitting = false);
-    _ShowSuccessSnack();
+    _showSuccessSnack();
     _redirectUser();
     print(responseData);
   } //response working on web not on emulator or any device
 
-  void _ShowSuccessSnack() {
-    final snackbar = SnackBar(
-      content: Text(
-        'User $_username successfully created!',
-        style: TextStyle(color: Colors.green),
+  void _showSuccessSnack() {
+    final snackBar = ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'User $_username successfully created!',
+          style: TextStyle(color: Colors.green),
+        ),
       ),
     );
-    _scaffoldKey.currentState.showSnackBar(snackbar);
+    // _scaffoldKey.currentState.showSnackBar(snackBar);
     _formKey.currentState.reset();
   }
 
-  // ScaffoldMessenger.of(context).showSnackBar(
-  // SnackBar(
-  // content: const Text('A SnackBar has been shown.'),
-  // ),
-  // );
-
-  void _redirectUser(){
-    Future.delayed(Duration(seconds: 2), (){
+  void _redirectUser() {
+    Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacementNamed(context, '/Products');
     });
   }
