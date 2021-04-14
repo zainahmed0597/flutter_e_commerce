@@ -90,22 +90,26 @@ class _RegisterPageState extends State<RegisterPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: Column(
         children: [
-          MaterialButton(
-              child: Text(
-                "Submit",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(color: Colors.black),
-              ),
-              elevation: 8.0,
-              onPressed: _submit,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10.0),
-                ),
-              ),
-              color: Theme.of(context).primaryColor),
+          _isSubmitting == true
+              ? CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation(Theme.of(context).primaryColor))
+              : MaterialButton(
+                  child: Text(
+                    "Submit",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Colors.black),
+                  ),
+                  elevation: 8.0,
+                  onPressed: _submit,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                  color: Theme.of(context).primaryColor),
           TextButton(
             child: Text(
               "Existing user? Login",
@@ -148,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
-    // _scaffoldKey.currentState.showSnackBar(snackBar);
+    // _scaffoldKey.currentState.showSnackBar;
     _formKey.currentState.reset();
   }
 
