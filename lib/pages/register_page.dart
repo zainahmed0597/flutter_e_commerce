@@ -137,10 +137,16 @@ class _RegisterPageState extends State<RegisterPage> {
         'http://localhost:1337/auth/local/register',
         body: {"username": _username, "email": _email, "password": _password});
     final responseData = json.decode(response.body);
-    setState(() => _isSubmitting = false);
-    _showSuccessSnack();
-    _redirectUser();
-    print(responseData);
+    if (response.statusCode == 200) {
+      setState(() => _isSubmitting = false);
+      _showSuccessSnack();
+      _redirectUser();
+      print(responseData);
+    } else {
+      setState(() => _isSubmitting = false);
+      final dynamic errorMsg = responseData['message'];
+      _showErrorSnack(errorMsg);
+    }
   } //response working on web not on emulator or any device
 
   void _showSuccessSnack() {
@@ -152,12 +158,19 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
-    // _scaffoldKey.currentState.showSnackBar;
+    // _scaffoldKey.currentState.showSnackBar(snackBar);
     _formKey.currentState.reset();
   }
 
+  void _showErrorSnack(dynamic errorMsg) {
+    print(errorMsg); // error is here now but ot print in snackBar
+    final snackBar = SnackBar(content: Text(errorMsg, style: TextStyle(color: Colors.red)));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    throw Exception('Error registering: $errorMsg');
+  }
+
   void _redirectUser() {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       Navigator.pushReplacementNamed(context, '/Products');
     });
   }
