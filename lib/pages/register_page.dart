@@ -163,8 +163,9 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _showErrorSnack(dynamic errorMsg) {
-    print(errorMsg); // error is here now but ot print in snackBar
-    final snackBar = SnackBar(content: Text(errorMsg, style: TextStyle(color: Colors.red)));
+    print(errorMsg); // error is here now but ot print in snackBar...
+    final snackBar =
+        SnackBar(content: Text(errorMsg, style: TextStyle(color: Colors.red)));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     throw Exception('Error registering: $errorMsg');
   }
