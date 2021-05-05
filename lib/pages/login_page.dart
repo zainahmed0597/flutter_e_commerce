@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -6,8 +8,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  bool _obscureText = true;
+  bool _isSubmitting, _obscureText = true;
   String _email, _password;
 
   Widget _showTitle() {
@@ -64,22 +67,26 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: Column(
         children: [
-          MaterialButton(
-              child: Text(
-                "Submit",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(color: Colors.black),
-              ),
-              elevation: 8.0,
-              onPressed: _submit,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10.0),
-                ),
-              ),
-              color: Theme.of(context).accentColor),
+          _isSubmitting == true
+              ? CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation(Theme.of(context).accentColor))
+              : MaterialButton(
+                  child: Text(
+                    "Submit",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Colors.black),
+                  ),
+                  elevation: 8.0,
+                  onPressed: _submit,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                  color: Theme.of(context).accentColor),
           TextButton(
             child: Text(
               "New user? Register",
@@ -93,17 +100,63 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void _registerUSer() async {
+    setState(() => _isSubmitting = true);
+    http.Response response = await http.post(
+        'http://localhost:1337/auth/local',
+        body: {"identifier": _email, "password": _password});
+    final responseData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      setState(() => _isSubmitting = false);
+      _showSuccessSnack();
+      _redirectUser();
+      print(responseData);
+    } else {
+      setState(() => _isSubmitting = false);
+      final dynamic errorMsg = responseData['message'];
+      _showErrorSnack(errorMsg);
+    }
+  } //response working on web not on emulator or any device
+
+  void _showSuccessSnack() {
+    final snackBar = ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'User successfully logged in!',
+          style: TextStyle(color: Colors.green),
+        ),
+      ),
+    );
+    // _scaffoldKey.currentState.showSnackBar(snackBar);
+    _formKey.currentState.reset();
+  }
+
+  void _showErrorSnack(dynamic errorMsg) {
+    print(errorMsg); // error is here now but ot print in snackBar...
+    final snackBar =
+        SnackBar(content: Text(errorMsg, style: TextStyle(color: Colors.red)));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    throw Exception('Error logging in: $errorMsg');
+  }
+
+  void _redirectUser() {
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.pushReplacementNamed(context, '/Products');
+    });
+  }
+
   void _submit() {
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
-      print('Email: $_email, Password: $_password');
+      _registerUSer();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Login'),
       ),
