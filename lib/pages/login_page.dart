@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -102,12 +103,12 @@ class _LoginPageState extends State<LoginPage> {
 
   void _registerUSer() async {
     setState(() => _isSubmitting = true);
-    http.Response response = await http.post(
-        'http://localhost:1337/auth/local',
+    http.Response response = await http.post('http://localhost:1337/auth/local',
         body: {"identifier": _email, "password": _password});
     final responseData = json.decode(response.body);
     if (response.statusCode == 200) {
       setState(() => _isSubmitting = false);
+      _storeUserData(responseData);
       _showSuccessSnack();
       _redirectUser();
       print(responseData);
@@ -117,6 +118,13 @@ class _LoginPageState extends State<LoginPage> {
       _showErrorSnack(errorMsg);
     }
   } //response working on web not on emulator or any device
+
+  void _storeUserData(responseData) async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> user = responseData['user'];
+    user.putIfAbsent('jwt', () => responseData['jwt']);
+    prefs.setString('user', json.encode(user));
+  }
 
   void _showSuccessSnack() {
     final snackBar = ScaffoldMessenger.of(context).showSnackBar(
