@@ -159,7 +159,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _showSuccessSnack() {
-    final snackBar = ScaffoldMessenger.of(context).showSnackBar(
+    // final snackBar =
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           'User $_username successfully created!',

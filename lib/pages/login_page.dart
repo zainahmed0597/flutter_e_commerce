@@ -127,7 +127,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showSuccessSnack() {
-    final snackBar = ScaffoldMessenger.of(context).showSnackBar(
+    // final snackBar =
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           'User successfully logged in!',
